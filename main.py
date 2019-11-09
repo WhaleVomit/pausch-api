@@ -54,14 +54,26 @@ def hex_to_rgb(cpanels):
   return rgbs
 
 
-# Displays the rgb colors on the respective panels on the bridge
+# displays the rgb colors on the respective panels on the bridge
 def disp_rgb(rgbs):
-  for i in range(len(rgbs)):
-    rgb = rgbs[i]
-    for j in range(5):
-      rig.select("$panel="+str(52+j-i*5)) \
-        .setRGBRaw(float(rgb[0])/255,float(rgb[1])/255,float(rgb[2])/255)
+	for i in range(len(rgbs)):
+		rgb = rgbs[i]
+		for j in range(5):
+			set_panel(52+j-i*5,rgb)
 
+# converts 0-255 color to 0-1
+def color_to_raw(rgb):
+    return [float(rgb[0])/255, float(rgb[1])/255, float(rgb[2])/255]
+
+# set panel at idx to rgb value (0-255)
+def set_panel(idx, rgb):
+    rgbRaw = color_to_raw(rgb)
+    rig.select("$panel=" + str(idx)).setRGBRaw(rgbRaw[0], rgbRaw[1], rgbRaw[2])
+
+# set sequence at idx to rgb value (0-255)
+def set_sequence(idx, rgb):
+    rgbRaw = color_to_raw(rgb)
+    rig.select('$sequence=' + str(idx)).setRGBRaw(rgbRaw[0], rgbRaw[1], rgbRaw[2])
 
 @app.route('/theme', methods=['GET','POST'])
 @cross_origin()
